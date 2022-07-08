@@ -1,0 +1,14 @@
+{
+  "name": "poc-backend",
+  "version": "1.0.0",
+  "description": "\"poc backend todo list\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jay khot",
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^2.0.19"
+  }
+}
