@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3000;
 connectToMongo();
 
 app.use(bodyParser.json());
-app.use('/auth', require('./Routes/auth'));
+app.use('/auth', require('./routes/auth'));
 
 app.listen(PORT, () => {
     console.log(`POC app listening on port ${PORT}`)
