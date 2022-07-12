@@ -1,5 +1,7 @@
 const User = require('../models/Users');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const secreteKey = process.env.JWT_SECREATE_KEY;
 
 exports.signUp = async (req, res)=>{
     
@@ -18,10 +20,51 @@ exports.signUp = async (req, res)=>{
             email: req.body.email,
             password: secPass
           })
+
+          const data = {
+            id:user.id,
+            name:user.name,
+            email:user.email
+          }
       
-          return res.status(200).json({isLogStatus:true, success:"User created successfully"})
+          const authToken = jwt.sign(data, secreteKey);
+      
+          return res.status(200).json({isLogStatus:true, success:"User created successfully", authToken:authToken})
       } catch (error) {
           console.log(error.message)
-          res.status(500).send('Some error occured');
+          res.status(500).send('Internal Server Error');
       }
+}
+
+exports.signIn = async (req, res)=>{
+  try{
+    const {email, password} = req.body;
+    let isLogStatus = false;
+
+    console.log();
+
+    let user = await User.findOne({email:email});
+    if(!user){
+      return res.status(400).json({isLogStatus:false, error:'Email does not exists'});
+    }
+    
+    const passwordCompare = await bcrypt.compare(password, user.password);
+
+    if(!passwordCompare){
+      return res.status(400).json({isLogStatus:false, error:'Please try to login correct credientails'});
+    }
+
+    const data = {
+      id:user.id,
+      name:user.name,
+      email:user.email
+    }
+
+    const authToken = jwt.sign(data, secreteKey);
+
+    return res.status(200).json({isLogStatus:true, success:"User Logged in successfully", authToken:authToken})
+  } catch (error){
+    console.log(error.message)
+    res.status(500).send('Internal Server Error');
+  }
 }

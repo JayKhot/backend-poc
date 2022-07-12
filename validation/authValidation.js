@@ -28,3 +28,14 @@ exports.signUpValidation = [
       return true;
     }),
 ];
+
+
+exports.signInValidation = [
+  check("email")
+      .isEmail()
+      .withMessage("invalid email address")
+      .normalizeEmail(),
+  check("password")
+      .notEmpty()
+      .withMessage("Password is required")
+];
